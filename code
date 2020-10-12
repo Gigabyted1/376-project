@@ -1,13 +1,18 @@
-/* Rooms */
-room(room1, ('Starting room\n', '_ _ _ _ _ _ _\n| X X X X X |')).
-room(room2, 'Starting room').
-room(room3, 'Starting room').
-room(room4, 'Starting room').
-room(room5, 'Starting room').
-room(room6, 'Starting room').
-room(room7, 'Starting room').
+/* Rooms - room(<name>, <desc>). */
+room(lobby, '').
+room(hall_down, '').
 
-printRoom:-
-read(Name),
-room(Name, X),
-write(X).
+/* Doors - door(<room1>, <room2>). */
+door(lobby, hall_down).
+
+/* Doors aren't one-way */
+:- forall(door(X,Y), assert(door(Y,X))).
+
+move(Room) :-
+  my_loc(Here),
+  door(Here, Room),
+  retract(my_loc(Here)),
+  assert(my_loc(Room))!.
+  
+move(_) :-
+  
