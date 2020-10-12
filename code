@@ -1,0 +1,13 @@
+/* Rooms */
+room(room1, ('Starting room\n', '_ _ _ _ _ _ _\n| X X X X X |')).
+room(room2, 'Starting room').
+room(room3, 'Starting room').
+room(room4, 'Starting room').
+room(room5, 'Starting room').
+room(room6, 'Starting room').
+room(room7, 'Starting room').
+
+printRoom:-
+read(Name),
+room(Name, X),
+write(X).
