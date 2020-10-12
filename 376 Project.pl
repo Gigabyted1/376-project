@@ -9,9 +9,15 @@ door(lobby, hall_down).
 :- forall(door(X,Y), assert(door(Y,X))).
 
 move(Room) :-
+  room_exists(Room),
   my_loc(Here),
   door(Here, Room),
   retract(my_loc(Here)),
-  assert(my_loc(Room))!.
+  assert(my_loc(Room)),
+  print_room_info, !.
   
-move(_) :-
+room_exists(Room) :-
+  room(Room, _).
+  
+room_exists(_) :-
+  print("D'oh! No such room exists.").
