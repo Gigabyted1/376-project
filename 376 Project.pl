@@ -1,6 +1,12 @@
+/* Define our custom stuff */
+:- dynamic my_loc/1, door/2.
+
+/* Initial location is the lobby */
+my_loc(lobby).
+
 /* Rooms - room(<name>, <desc>). */
-room(lobby, '').
-room(hall_down, '').
+room(lobby, 'The lobby of ATS. There are several chairs, a nice big doormat, and a variety of science-related decorations.').
+room(hall_down, 'The main hallway on the first floor of ATS. It is lined with doors to various classrooms.').
 
 /* Doors - door(<room1>, <room2>). */
 door(lobby, hall_down).
@@ -27,3 +33,15 @@ connection_exists(Here, Room) :-
   
 connection_exists(Here, _) :-
   nl, print("D'oh! You can't get to that room from here."), nl, !, fail.
+  
+print_room_info :- 
+  my_loc(Here),
+  describe_room(Here).
+  
+describe_room(Here) :-
+  room(Here, X),
+  nl, write(X), nl.
+  
+list_doors(Here) :-
+  door(Here, X),
+  nl, write(X), nl.
