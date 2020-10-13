@@ -10,14 +10,20 @@ door(lobby, hall_down).
 
 move(Room) :-
   room_exists(Room),
-  my_loc(Here),
-  door(Here, Room),
+  my_loc(Here) !,
+  connection_exists(Here, Room),
   retract(my_loc(Here)),
-  assert(my_loc(Room)),
-  print_room_info, !.
+  asserta(my_loc(Room)),
+  print_room_info.
   
 room_exists(Room) :-
   room(Room, _).
   
 room_exists(_) :-
-  print("D'oh! No such room exists.").
+  nl, print("D'oh! No such room exists."), nl, !, fail.
+  
+connection_exists(Here, Room) :-
+  door(Here, Room).
+  
+connection_exists(Here, _) :-
+  nl, print("D'oh! You can't get to that room from here."), nl, !, fail.
