@@ -10,6 +10,9 @@ room(hall_down, 'The main hallway on the first floor of ATS. It is lined with do
 
 /* Doors - door(<room1>, <room2>). */
 door(lobby, hall_down).
+door(hall_down, hall_up).
+door(hall_down, auditorium).
+door(hall_down, bathroom).
 
 /* Doors aren't one-way */
 :- forall(door(X,Y), assert(door(Y,X))).
