@@ -14,7 +14,7 @@ room(classroom_down, 'classroom_down.').
 room(bathroom_up, 'The second floor bathroom contains multiple sinks, soap and paper towel dispensers, and several stalls that can be used to hide in.').
 room(classroom230, 'classroom230.').
 room(classroom232, 'classroom232.').
-room(conference_room , "The conference room of the computer science department is where many students go to study, work on assignments or projects, and meet with friends. Objects may be found here left by students.').
+room(conference_room , 'The conference room of the computer science department is where many students go to study, work on assignments or projects, and meet with friends. Objects may be found here left by students.').
 room(lair, 'The computer science department offices once held the offices of several department faculty members, now it is the lair of a mad computer scienist.').
 
 /* Doors - door(<room1>, <room2>). */
