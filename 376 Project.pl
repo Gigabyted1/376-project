@@ -10,7 +10,7 @@ room(hall_up, 'The second floor hallway is home to the computer science departme
 room (stairway, 'The staircase is how students maneuver from the floor to floor of ATS.')
 room(auditorium, 'The aduditorium of ATS is one of the largest rooms in the building and can hold large class sizes due to its ample seating. Due to the number of students that may use the room throughout the day, objects may be left in the room by them that could assit you in the game.').
 room(bathroom_down, 'The bathroom of the first floor contains multiple sinks, soap and paper towel dispensers, and several stalls that can be used to hide in.').
-room(classroom_down, 'classroom_down.').
+room(classroom_down, 'A fairly large room filled with several student desks and a project playing an eerie news clip about an mad SRU professor.').
 room(bathroom_up, 'The second floor bathroom contains multiple sinks, soap and paper towel dispensers, and several stalls that can be used to hide in.').
 room(classroom230, 'classroom230.').
 room(classroom232, 'classroom232.').
