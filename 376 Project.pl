@@ -18,20 +18,20 @@ room(conference_room , 'The conference room of the computer science department i
 room(lair, 'The computer science department offices once held the offices of several department faculty members, now it is the lair of a mad computer scienist.').
 
 /* Doors - door(<room1>, <room2>). */
-door(lobby, hall_down).
-door(hall_down, auditorium).
-door(hall_down, bathroom_down).
-door(hall_down, classroom_down).
-door(hall_down, stairway).
-door(stairway, hall_up).
-door(hall_up, bathroom_up).
-door(hall_up, classroom230).
-door(hall_up, classroom232).
-door(hall_up, conference_room).
-door(hall_up, lair).
+door(lobby, hall_down, '0').
+door(hall_down, auditorium, '1').
+door(hall_down, bathroom_down, '2').
+door(hall_down, classroom_down, '3').
+door(hall_down, stairway, '4').
+door(stairway, hall_up, '5').
+door(hall_up, bathroom_up, '6').
+door(hall_up, classroom230, '7').
+door(hall_up, classroom232, '8').
+door(hall_up, conference_room, '9').
+door(hall_up, lair, '10').
 
 /* Doors aren't one-way */
-:- forall(door(X,Y), assert(door(Y,X))).
+:- forall(door(X,Y,Z), assert(door(Y,X,Z))).
 
 move(Room) :-
   room_exists(Room),
@@ -47,7 +47,7 @@ room_exists(_) :-
   nl, write("D'oh! No such room exists."), nl, !, fail.
   
 connection_exists(Here, Room) :-
-  door(Here, Room).
+  door(Here, Room, _).
 connection_exists(Here, Room) :-
   nl, write("D'oh! You can't get to that room from here."), nl, !, fail.
   
@@ -57,12 +57,11 @@ observe :-
   list_doors(Here), !.
   
 describe_room(Here) :-
-  room(Here, X),
+  room(Here, X, _),
   nl, write(X), nl.
   
 list_doors(Here) :-
-  door(Here, ConnectedRoom),
-  nl, write(X), nl, fail.
+  forall(door(Here, ConnectedRoom, _), (nl, write(ConnectedRoom), nl)).
 
 instructions :-
   nl, write("Possible commands (use regular Prolog syntax):"),
