@@ -36,27 +36,25 @@ door(hall_up, lair).
 move(Room) :-
   room_exists(Room),
   my_loc(Here), !,
-  connection_exists(Here, Room),
+  connection_exists(Here, Room), !,
   retract(my_loc(Here)),
   asserta(my_loc(Room)),
-  print_room_info.
+  observe, !.
   
 room_exists(Room) :-
   room(Room, _).
-  
 room_exists(_) :-
   nl, write("D'oh! No such room exists."), nl, !, fail.
   
 connection_exists(Here, Room) :-
   door(Here, Room).
-  
 connection_exists(Here, Room) :-
   nl, write("D'oh! You can't get to that room from here."), nl, !, fail.
   
-print_room_info :- 
+observe :- 
   my_loc(Here),
-  describe_room(Here),
-  list_doors(Here).
+  describe_room(Here), !,
+  list_doors(Here), !.
   
 describe_room(Here) :-
   room(Here, X),
@@ -65,3 +63,9 @@ describe_room(Here) :-
 list_doors(Here) :-
   door(Here, ConnectedRoom),
   nl, write(X), nl, fail.
+
+instructions :-
+  nl, write("Possible commands (use regular Prolog syntax):"),
+  nl, write("start: begin the adventure!"),
+  nl, write("move(<room>): move to a connected room"),
+  nl, write("observe: get information about your surroundings").
