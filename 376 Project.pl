@@ -54,7 +54,7 @@ room_exists(_) :-
   
 connection_exists(Here, Room) :-
   door(Here, Room, _).
-connection_exists(Here, Room) :-
+connection_exists(_) :-
   nl, write("D'oh! You can't get to that room from here."), nl, !, fail.
   
 observe :-
