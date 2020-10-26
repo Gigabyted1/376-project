@@ -33,8 +33,8 @@ door(hall_up, lair, '10').
 /* Furniture - furn(<furn_name>, <location>, <amount>). */
 furn(dino_statue, lobby, 2).
 
-/* Items - item(<item_name>, <location>). */
-item(chewing_gum, (lobby, dino_statue, 1)).
+/* Items - item(<item_name>, <description>, <location>). */
+item(chewing_gum, 'It's chewing gum', (lobby, dino_statue, 1)).
 
 /* Doors aren't one-way */
 :- forall(door(X,Y,Z), assert(door(Y,X,Z))).
