@@ -65,7 +65,7 @@ observe :-
   
 inspect(Furniture, Which) :-
   my_loc(Here),
-  forall(item(Item, Desc, (Here, Furniture, Which)), (nl, write(Item),write(' - '),write(Desc)).
+  forall(item(Item, Desc, (Here, Furniture, Which)), (nl, write(Item),write(' - '),write(Desc))).
   
 describe_room(Here) :-
   room(Here, Desc, _),
