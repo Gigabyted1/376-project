@@ -34,7 +34,7 @@ door(hall_up, lair, '10').
 furn(dino_statue, lobby, 2).
 
 /* Items - item(<item_name>, <location>). */
-item(chewing_gum, (lobby, dinostatue, 1)).
+item(chewing_gum, (lobby, dino_statue, 1)).
 
 /* Doors aren't one-way */
 :- forall(door(X,Y,Z), assert(door(Y,X,Z))).
@@ -60,18 +60,24 @@ connection_exists(Here, Room) :-
 observe :-
   my_loc(Here),
   describe_room(Here), !,
+  list_furniture(Here), !,
   list_doors(Here), !.
   
-look_at(Furniture, Which) :-
+inspect(Furniture, Which) :-
   my_loc(Here),
-  forall(item(Item, (Here, Furniture, Which)), (nl, write(Item), nl)).
+  forall(item(Item, (Here, Furniture, Which)), (nl, write(Item))).
   
 describe_room(Here) :-
-  room(Here, X, _),
-  nl, write(X), nl.
+  room(Here, Desc, _),
+  nl, write(Desc), nl.
+  
+list_furniture(Here) :-
+  write('The room contains: '),
+  forall(furn(Name, Here, Amount), (nl, write(Amount),write(' '),write(Name))).
   
 list_doors(Here) :-
-  forall(door(Here, ConnectedRoom, _), (nl, write(ConnectedRoom), nl)).
+  nl, write('There are doors to: '),
+  forall(door(Here, ConnectedRoom, _), (nl, write(ConnectedRoom))).
 
 instructions :-
   nl, write("Possible commands (use regular Prolog syntax):"),
