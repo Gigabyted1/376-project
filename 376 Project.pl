@@ -1,8 +1,6 @@
 /* Define our custom stuff */
 :- dynamic my_loc/1, door/2, in_bag/2.
 
-my_loc(lobby).
-
 /* Rooms - room(<name>, <desc>). */
 room(lobby, 'The lobby of ATS. There are several chairs, a nice big doormat, and a variety of science-related decorations.').
 room(hall_down, 'The main hallway on the first floor of ATS. It is lined with doors to various classrooms.').
@@ -96,16 +94,27 @@ list_doors(Here) :-
   
 % ----- Handles interacting with items ----- %
   
-pickup(Item) :-
+pickup(Item, Furn) :-
   my_loc(Here), !,
   item(Item, Desc, (Here, Furn, Which)), !,
   retract(item(Item, Desc, (Here, Furn, Which))),
   asserta(in_bag(Item, Desc)),
   nl, write("You picked up "),write(Item).
 pickup(_) :-
-  nl, write("You either can't reach that item, or it doesn't exist"), !, fail.
+  nl, write("You either can't reach that item, or it doesn't exist."), !, fail.
   
+% ----- Game state logic ----- %
 
+start :-
+  nl, write("This is an example intro that might be used to describe the situation in the game world."),
+  my_loc(lobby).
+  
+% TODO: Give hints upon death as to what to do to avoid it next time
+die :-
+  nl, write("You have died... Sorry about that. Use command "start" to try again."),
+  retractall(my_bag(_, _)), retractall(my_loc(_)).
+  
+% ----- Misc ----- %
 
 instructions :-
   nl, write("Possible commands (use regular Prolog syntax):"),
