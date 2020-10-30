@@ -10,8 +10,8 @@ room(auditorium, 'The auditorium of ATS is one of the largest rooms in the build
 room(bathroom_down, 'The bathroom of the first floor contains multiple sinks, soap and paper towel dispensers, and several stalls that can be used to hide in.').
 room(classroom_down, 'A fairly large room filled with several student desks and a project playing an eerie news clip about an mad SRU professor.').
 room(bathroom_up, 'The second floor bathroom contains multiple sinks, soap and paper towel dispensers, and several stalls that can be used to hide in.').
-room(classroom230, 'classroom230.').
-room(classroom232, 'classroom232.').
+room(classroom230, 'One of the many computer science department classrooms, look around there may be objects that will help you against an adversaries that you may come against.').
+room(classroom232, 'One of the many computer science department classrooms, look around there may be objects that will help you against an adversaries that you may come against.').
 room(conference_room , 'The conference room of the computer science department is where many students go to study, work on assignments or projects, and meet with friends. Objects may be found here left by students.').
 room(lair, 'The computer science department offices once held the offices of several department faculty members. Now it is the lair of a mad computer scientist.').
 
@@ -34,9 +34,14 @@ furn('Bookcase', classroom230, 1).
 furn('Bench', hall_up, 2).
 furn('Functional PC', classroom232, 5).
 furn('Broken PC', classroom232, 10).
+furn('White Board', classroom_down, 3).
+furn('Table', conference_room, 1).
 
-/* Items - item(<item_name>, <description>, (<location-room>, <location-furniture>, <which-furniture>). */
+
+/* Items - item(<item_name>, <description>, (<location-room>, <location-furniture>, <which-furniture>)). */
 item('Used chewing gum', 'It's chewing gum', (lobby, 'Dinosaur Statue', 1)).
+item('Coffee Maker', 'Eveyone likes coffee, maybe even a mad professor?', (conference_room, 'Table', 1)).
+
 
 % These are just test items for defeating the boss, feel free to name them whatever fits with the story. I think them being Javascript related would be hilarious and perfect
 % Also, we should have each of the items be hidden behind either a puzzle or an enemy that also requires some item to defeat them.
