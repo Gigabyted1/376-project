@@ -70,7 +70,7 @@ room_exists(_) :-
   
 connection_exists(Here, Room) :-
   door(Here, Room, _).
-connection_exists(_) :-
+connection_exists(_, _) :-
   nl, write("D'oh! You can't get to that room from here."), nl, !, fail.
   
 % ----- Handles describing the player's surroundings ----- %
@@ -105,7 +105,7 @@ pickup(Item, Furn) :-
   retract(item(Item, Desc, (Here, Furn, Which))),
   asserta(in_bag(Item, Desc)),
   nl, write("You picked up "),write(Item).
-pickup(_) :-
+pickup(_, _) :-
   nl, write("You either can't reach that item, or it doesn't exist."), !, fail.
   
 % ----- Game state logic ----- %
