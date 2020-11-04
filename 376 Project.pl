@@ -1,5 +1,5 @@
 % Reset assertions so there isn't exponential growth of doors between rooms...
-:- retractall(retractall(my_loc(_)), door(_, _, _)), retractall(in_bag(_, _)), retractall(item(_, _, _)).
+:- retractall(my_loc(_)), retractalll(door(_, _, _)), retractall(in_bag(_, _)), retractall(item(_, _, _)).
 
 % Define our custom stuff
 :- dynamic my_loc/1, door/3, in_bag/2, item/3.
