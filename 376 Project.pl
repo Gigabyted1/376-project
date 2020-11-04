@@ -22,12 +22,12 @@ room(conference_room , 'The conference room of the computer science department i
 room(lair, 'The computer science department offices once held the offices of several department faculty members. Now it is the lair of a mad computer scientist.').
 
 % Doors - door(<room1>, <room2>).
-door(lobby, hall_down, '0').
+door("Lobby", hall_down, '0').
 door(hall_down, auditorium, '1').
 door(hall_down, bathroom_down, '2').
 door(hall_down, classroom_down, '3').
 door(hall_down, stairway, '4').
-door(stairway, hall_up, '5').
+door("Stairway", hall_up, '5').
 door(hall_up, bathroom_up, '6').
 door(hall_up, classroom230, '7').
 door(hall_up, classroom232, '8').
@@ -54,10 +54,13 @@ item("'JavaScript: The Definitive Guide' by David Flanagan", "A book with a some
 item("Laptop", "A personal laptop that looks to be left in haste by a fleeing student. It still works!", (hall_up, 'Bench', 1), false).
 item("USB Flash Drive", "A standard 16GB flash drive. A particular professor was crazy about these...", (classroom232, 'Functional PC', 4), false).
 
-% Enemy - enemy(<name>, <appearance>, <item-to-defeat>).
-enemy("Robot #1", "Robot description 1", "Used chewing gum").
-enemy("Robot #2", "Robot description 2", "Robot defeater 2").
-enemy("Robot #3", "Robot description 3", "Robot defeater 3").
+% Enemy - enemy(<name>, <item-to-defeat>, (<location>, <appearance>)).
+enemy("Robot #1", "Used chewing gum", ("Robot description 1", "Stairway")).
+enemy("Robot #2", "Robot killer 2", ("Robot description 2", "Robot location 2")).
+enemy("Robot #3", "Robot killer 3", ("Robot description 3", "Robot location 3")).
+
+% Death(ways to die) - death(<enemy/environment>, <death-message>, <avoidance-hint>).
+death("Robot #1", "You charge <robot #1> and as its sensors prick up towards you, there's no time to react as it guns you down with sick looking laser beams. Sick, though they may be, you are no less dead.", "<some-hint>").
 
 /* Doors aren't one-way */
 :- forall(door(X,Y,Z), assert(door(Y,X,Z))).
@@ -88,7 +91,8 @@ observe :-
   my_loc(Here),
   nl, describe_room(Here), !,
   nl, list_furniture(Here), !,
-  nl, list_doors(Here), !, fail.
+  nl, list_doors(Here), !,
+  nl, list_enemies(Here), !, fail.
   
 inspect(Furniture, Which) :-
   my_loc(Here), !,
@@ -106,6 +110,11 @@ list_doors(Here) :-
   nl, write('There are doors to: '),
   forall(door(Here, ConnectedRoom, _), (nl, write('>'),write(ConnectedRoom))).
   
+list_enemies(Here) :-
+  enemy(Enemy, _, (Desc, Here),
+  nl, write('>'),write(Enemy),write(" is guarding this room. You will need to kill it before doing anything here (including moving anywhere except from whence you came).").
+list_enemies(_).
+  
 % ----- Handles interacting with items ----- %
   
 pickup(Item, Furn, Which) :-
@@ -115,7 +124,7 @@ pickup(Item, Furn, Which) :-
   asserta(item(Item, Desc, (Here, Furn, Which), true)),
   nl, write("You picked up "),write(Item).
 pickup(_, _, _) :-
-  nl, write("You either can't reach that item, or it doesn't exist."), !, fail.
+  nl, write("There is no such item within reach."), !, fail.
   
 bag :-
   write('Your bag contains: '), !,
@@ -124,24 +133,37 @@ bag :-
 % ----- Enemy interaction logic ----- %
 
 kill(Enemy) :-
+  my_loc(Here),
   in_bag(Item, _),
-  enemy(Enemy, _, Item), !,
+  enemy(Enemy, Item, (_, Here)), !,
   nl, write("You used "),write(Item),write(" to kill "),write(Enemy),write("!"), !.
 kill(Enemy) :-
-  nl, write("You charge the "),write(Enemy),write(", and as its sensors prick up towards you, there's no time to react as it guns you down with sick looking laser beams."), !, fail.
+  die(Enemy), !.
+  
+kill(Item) :-
+  my_loc(Here),
+  item(Item, _, (Here, _, _), _)),
+  nl, write("Are you feeling well? You can't kill "),write(Item),write("..."), !, fail.
+kill(Furniture) :-
+  my_loc(Here),
+  furn(Furniture, Here, _)),
+  nl, write("Are you feeling well? You can't kill "),write(Furniture),write("..."), !, fail.
+kill(_) :-
+  nl, write("You must be seeing things, there is no "),write(Enemy),write(" here."), !, fail.
   
 % ----- Game state logic ----- %
 
 start :-
   nl, write("This is an example intro that might be used to describe the situation in the game world."),
-  asserta(my_loc(lobby)), !,
+  asserta(my_loc("Lobby")), !,
   observe.
   
-% TODO: Give hints upon death as to what to do to avoid it next time
-die :-
-  nl, write("You have died... Sorry about that. Use command 'start' to try again."),
+die(Enemy) :-
+  enemy(Enemy, _, _),
+  death(Enemy, Desc, Hint),
+  nl, write(Desc), nl, write(Hint), nl, write("Use 'start' to begin again."),
   retractall(my_loc(_)),
-  forall(item(Item, Desc, (Here, Furn, Which), true), asserta(item(Item, Desc, (Here, Furn, Which), false))).
+  forall(item(Item, Desc, (Here, Furn, Which), true), asserta(item(Item, Desc, (Here, Furn, Which), false))), !, fail.
   
 % ----- Misc ----- %
 
@@ -149,7 +171,9 @@ instructions :-
   nl, write("Possible commands (use regular Prolog syntax):"),
   nl, write("start: begin the adventure!"),
   nl, write("move(<room>): move to a connected room"),
-  nl, write("pickup(<item>, <furniture>): pick up an item from some piece of furniture"),
-  nl, write("\t'Furniture' is broadly used to describe any uninteractable object"),
+  nl, write("pickup(<item>, <furniture>, <which>): pick up an item from some piece of furniture"),
+  nl, write("kill(<enemy>): attempt to kill an enemy"),
+  nl, write("\t'Furniture' is broadly used to describe any uninteractable object, and cannot be picked up"),
   nl, write("observe: get information about your surroundings"),
-  nl, write("inspect: look closer at a piece of furniture").
+  nl, write("inspect: look closer at a piece of furniture"),
+  nl, write("bag: list the contents of your bag").
