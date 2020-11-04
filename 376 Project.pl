@@ -54,7 +54,7 @@ item("'JavaScript: The Definitive Guide' by David Flanagan", "A book with a some
 item("Laptop", "A personal laptop that looks to be left in haste by a fleeing student. It still works!", (hall_up, 'Bench', 1), false).
 item("USB Flash Drive", "A standard 16GB flash drive. A particular professor was crazy about these...", (classroom232, 'Functional PC', 4), false).
 
-% Enemy - enemy(<name>, <item-to-defeat>, (<location>, <appearance>)).
+% Enemy - enemy(<name>, <item-to-defeat>, (<appearance>, <location>)).
 enemy("Robot #1", "Used chewing gum", ("Robot description 1", "Stairway")).
 enemy("Robot #2", "Robot killer 2", ("Robot description 2", "Robot location 2")).
 enemy("Robot #3", "Robot killer 3", ("Robot description 3", "Robot location 3")).
