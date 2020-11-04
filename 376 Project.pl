@@ -1,4 +1,4 @@
-/* Define our custom stuff */
+// Define our custom stuff
 :- dynamic my_loc/1, door/2, in_bag/2.
 
 /* Rooms - room(<name>, <desc>). */
