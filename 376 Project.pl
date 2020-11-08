@@ -22,54 +22,64 @@ room(conference_room , 'The conference room of the computer science department i
 room(lair, 'The computer science department offices once held the offices of several department faculty members. Now it is the lair of a mad computer scientist.').
 
 % Doors - door(<room1>, <room2>).
-door("Lobby", hall_down, '0').
-door(hall_down, auditorium, '1').
-door(hall_down, bathroom_down, '2').
-door(hall_down, classroom_down, '3').
-door(hall_down, stairway, '4').
-door("Stairway", hall_up, '5').
-door(hall_up, bathroom_up, '6').
-door(hall_up, classroom230, '7').
-door(hall_up, classroom232, '8').
-door(hall_up, conference_room, '9').
-door(hall_up, lair, '10').
+door("Lobby", "Hall_Down", '0').
+door("Hall_Down", "Auditorium", '1').
+door("hall_Down", "Bathroom_Down", '2'). % Possibly find a way to lock the door
+door("hall_down", "Classroom_Down", '3').
+door("hall_down", "Stairway", '4').
+door("Stairway", "Hall_Up", '5').
+door("Hall_Up", "Bathroom_Up", '6') .% Possibly find a way to lock the door
+door("Hall_Up", "Classroom230", '7').
+door("Hall_Up", "Classroom232", '8').
+door("Hall_Up", "Conference_Room", '9').
+door("Hall_Up", "Lair", '10'). % Possibly find a way to lock the door
 
 /* Doors aren't one-way */
 :- forall(door(X,Y,Z), assert(door(Y,X,Z))).
 
 % Furniture - furn(<furn_name>, <location>, <amount>).
-furn("Dinosaur Statue", lobby, 2).
-furn("Bookcase", classroom230, 1).
-furn("Bench", hall_up, 2).
-furn("Functional PC", classroom232, 5).
-furn("Broken PC", classroom232, 10).
-furn("White Board", classroom_down, 3).
-furn("Table", conference_room, 1).
+furn("Dinosaur Statue", "Lobby", 2).
+furn("Bookcase", "Classroom230", 1).
+furn("Bench", "Hall_Up", 2).
+furn("Functional PC", "Classroom232", 5).
+furn("Broken PC", "Classroom232", 10).
+furn("White Board", "Classroom_Down", 3).
+furn("Table", "Conference_Room", 1).
+furn("Sink", "Bathroom_Down", 8).
+furn("Desk", "Classroom_Down", 10).
+furn("Water Fountain", "Hall_Down", 1).
+furn("Chair", "Auditorium", 5).
 
 % Items - item(<item_name>, <description>, (<location-room>, <location-furniture>, <which-furniture>), <in-bag?>).
-item("Used chewing gum", "It's chewing gum", (lobby, "Dinosaur Statue", 1), false).
-item("Coffee Maker", "Eveyone likes coffee, maybe even a mad professor?", (conference_room, "Table", 1), false).
+item("Used chewing gum", "It's chewing gum", ("Lobby", "Dinosaur Statue", 1), false).
+item("Coffee maker", "Eveyone likes coffee, maybe even a mad professor?", ("Conference_Room", "Table", 1), false).
+item("Eraser", "You notice that on the white board 'JAVASCRIPT IS AWESOME!!!!!" is written. You should probably erase that before a certain unstable computer sicentist sees it...", ("Classroom_Down", "White Board",  1), false).
+item("Downstairs bathroom key", "Can be used to unlock the downstairs bathroom.", ("Classroom_Down", 'Desk' 2), false).
+item("Lair key", "Can be used to unlock the the door to the computer science department offices otherwise known as the mad professor's lair!", ("Auditorium", 'Chair' 2), false).
 
 % These are just test items for defeating the boss, feel free to name them whatever fits with the story. I think them being Javascript related would be hilarious and perfect
 % Also, we should have each of the items be hidden behind either a puzzle or an enemy that also requires some item to defeat them.
 item("Robot killer 1", "desc", ("room", "furniture", "which")).
 item("Robot killer 2", "desc", ("room", "furniture", "which")).
 item("Robot killer 3", "desc", ("room", "furniture", "which")).
-item("'JavaScript: The Definitive Guide' by David Flanagan", "A book with a somewhat disturbing aura... You feel a sense of dread just looking upon it.", (classroom230, 'Bookcase', 1), false).
-item("Laptop", "A personal laptop that looks to be left in haste by a fleeing student. It still works!", (hall_up, 'Bench', 1), false).
-item("USB Flash Drive", "A standard 16GB flash drive. A particular professor was crazy about these...", (classroom232, 'Functional PC', 4), false).
+item("'JavaScript: The Definitive Guide' by David Flanagan", "A book with a somewhat disturbing aura... You feel a sense of dread just looking upon it.", ("Classroom230", 'Bookcase', 1), false).
+item("Laptop", "A personal laptop that looks to be left in haste by a fleeing student. It still works!", ("Hall_Up", 'Bench', 1), false).
+item("USB Flash Drive", "A standard 16GB flash drive. A particular professor was crazy about these...", ("Classroom232", 'Functional PC', 4), false).
+item("Hand mirror", "A small cracked hand mirror that can be used to deflect lasers...", ("Bathroom_Down", 'Sink', 3), false).
+item("Water bottle", "Looks like a student left their water bottle behind. Hey it's full too!", ("Hall_Down", 'Water Fountain', 1), false).
 
 % Enemy - enemy(<name>, <item-to-defeat>, (<appearance>, <location>)).
-enemy("Laser Turret", "Robot killer 1", ("A dark shape rests at the top of the stairway. In the dim light, you can see that it is a turret of some kind.", "Stairway")).
-enemy("Robot #2", "Robot killer 2", ("Robot description 2", "Robot location 2")).
-enemy("Robot #3", "Robot killer 3", ("Robot description 3", "Robot location 3")).
-enemy("Boss", "Boss name", ("Boss description", "Boss location")).
+enemy("Laser Turret", "Hand mirror", ("A dark shape rests at the top of the stairway. In the dim light, you can see that it is a turret of some kind.", "Stairway")).
+enemy("Robotic Spider", "Water bottle", ("You hear a metalic clicking sound against the floor tiles, out of the shadows appears a huge spider with massive metal pinchers", "Auditorium")).
+enemy("Turtle-Bot", "Used chewing gum", ("Large tire skid marks can be seen all over the floor, you hear the buzzing a motor, form behind a desk a turtle-bot speeds with its gaint wheels", "Classroom232")).
+enemy("Robo-Sam", "Boss name", ("Once a professor from SRU, the Dr. Sam everyone knew is now a half humanoid-robot bent on terrorizing the computing students of SRU! ", "Boss location")).
+%The killing items from the boss are the javascript book, laptop, and USB drive
 
 % Death(ways to die) - death(<enemy/environment>, <death-message>, <avoidance-hint>).
-death("Robot #1", "You charge the turret. You hear a high-pitched noise and there's no time to react as the muzzle swings around and guns you down with sick looking laser beams. Sick, though they may be, you are no less dead.", "The laser turret appears to use sensors of some manner for targetting...").
-death("Robot #2", "msg", "hint").
-death("Robot #3", "msg", "hint").
-death("Boss", "msg", "hint").
+death("Laser Turret", "You charge the turret. You hear a high-pitched noise and there's no time to react as the muzzle swings around and guns you down with sick looking laser beams. Sick, though they may be, you are no less dead.", "Before dying, you notice one of the laser beams bounce of the reflective window.").
+death("Robotic Spider", "You attempt to flee, but the nasty thing catches you by the pant leg and pulls you to the floor. You're vision starts to blur as you see the spider come toward you, pinchers dripping with venom.", "Before falling unconscious, you see the bright lights and exposed circuits of the spider, probably dosen't wanna get those wet!").
+death("Turtle-Bot", "As you make to run, you are quickly swept away by the Turtle-Bot's massive wheels...", "If only you had something sticky to stop it from charging.").
+death("Robo-Sam", "Before you can even take a breath,  the once Dr. Sam blinds you his stock pile of red ink. Now incompacitated, Robo-Sam can turn you into a humanoid just like him...", "Regardless of his appearance, Robo-Sam still hates one thing more than anything else... Javascript.").
 
 % ----- Handles moving throughout the map ----- %
 
