@@ -34,6 +34,9 @@ door(hall_up, classroom232, '8').
 door(hall_up, conference_room, '9').
 door(hall_up, lair, '10').
 
+/* Doors aren't one-way */
+:- forall(door(X,Y,Z), assert(door(Y,X,Z))).
+
 % Furniture - furn(<furn_name>, <location>, <amount>).
 furn("Dinosaur Statue", lobby, 2).
 furn("Bookcase", classroom230, 1).
@@ -49,21 +52,24 @@ item("Coffee Maker", "Eveyone likes coffee, maybe even a mad professor?", (confe
 
 % These are just test items for defeating the boss, feel free to name them whatever fits with the story. I think them being Javascript related would be hilarious and perfect
 % Also, we should have each of the items be hidden behind either a puzzle or an enemy that also requires some item to defeat them.
-
+item("Robot killer 1", "desc", ("room", "furniture", "which")).
+item("Robot killer 2", "desc", ("room", "furniture", "which")).
+item("Robot killer 3", "desc", ("room", "furniture", "which")).
 item("'JavaScript: The Definitive Guide' by David Flanagan", "A book with a somewhat disturbing aura... You feel a sense of dread just looking upon it.", (classroom230, 'Bookcase', 1), false).
 item("Laptop", "A personal laptop that looks to be left in haste by a fleeing student. It still works!", (hall_up, 'Bench', 1), false).
 item("USB Flash Drive", "A standard 16GB flash drive. A particular professor was crazy about these...", (classroom232, 'Functional PC', 4), false).
 
 % Enemy - enemy(<name>, <item-to-defeat>, (<appearance>, <location>)).
-enemy("Robot #1", "Used chewing gum", ("Robot description 1", "Stairway")).
+enemy("Laser Turret", "Robot killer 1", ("A dark shape rests at the top of the stairway. In the dim light, you can see that it is a turret of some kind.", "Stairway")).
 enemy("Robot #2", "Robot killer 2", ("Robot description 2", "Robot location 2")).
 enemy("Robot #3", "Robot killer 3", ("Robot description 3", "Robot location 3")).
+enemy("Boss", "Boss name", ("Boss description", "Boss location")).
 
 % Death(ways to die) - death(<enemy/environment>, <death-message>, <avoidance-hint>).
-death("Robot #1", "You charge <robot #1> and as its sensors prick up towards you, there's no time to react as it guns you down with sick looking laser beams. Sick, though they may be, you are no less dead.", "<some-hint>").
-
-/* Doors aren't one-way */
-:- forall(door(X,Y,Z), assert(door(Y,X,Z))).
+death("Robot #1", "You charge the turret. You hear a high-pitched noise and there's no time to react as the muzzle swings around and guns you down with sick looking laser beams. Sick, though they may be, you are no less dead.", "The laser turret appears to use sensors of some manner for targetting...").
+death("Robot #2", "msg", "hint").
+death("Robot #3", "msg", "hint").
+death("Boss", "msg", "hint").
 
 % ----- Handles moving throughout the map ----- %
 
