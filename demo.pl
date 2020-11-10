@@ -7,7 +7,7 @@
 room("Tower", "A room constructed of stone blocks. A single window looks out on a vast wasteland.").
 room("Stairway", "A spiral staircase connecting the tower to the castle.").
 room("Base", "The space at the base of the tower. It's a round room with various decrepit trappings of a now-absent army.").
-room("Outside", "Freedom!").
+room("Outside", "Freedom! You've escaped the extremely difficult demonstration world!").
 
 door("Tower", "Stairway", "locked", "Shiny key").
 door("Stairway", "Base", "unlocked", "").
@@ -68,7 +68,6 @@ door_unlocked(Room) :-
   my_loc(Here),
   door(Here, Room, "locked", _),
   write("That door is locked! You will need a key to get through."), !, fail.
-
   
 enemy_dead(Here) :-
   enemy(Enemy, _, (_, Here), false), !,
@@ -136,7 +135,7 @@ kill(Enemy) :-
   nl, write("You used "),write(Item),write(" to kill "),write(Enemy),write("!").
 kill(Enemy) :-
   my_loc(Here),
-  enemy(Enemy, Item, (Desc, Here), true), !,
+  enemy(Enemy, _, (_, Here), true), !,
   nl, write("You can't kill a corpse..."), !, fail.
 kill(Item) :-
   my_loc(Here),
@@ -156,6 +155,11 @@ kill(Enemy) :-
 
 start :-
   nl, write("You wake up in an unfamiliar stone room. Not again..."),
+  retractall(my_loc(_)),
+  forall(item(A, B, (C, D, E), true), asserta(item(A, B, (C, D, E), false))), !,
+  forall(item(A, B, (C, D, E), true), retract(item(A, B, (C, D, E), true))), !,
+  forall(enemy(A, B, (C, D), true), asserta(enemy(A, B, (C, D), false))), !,
+  forall(enemy(A, B, (C, D), true), retract(enemy(A, B, (C, D), true))), !, fail.
   asserta(my_loc("Tower")), !,
   observe.
   
