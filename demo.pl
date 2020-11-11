@@ -90,6 +90,8 @@ inspect(Furniture, Which) :-
   my_loc(Here), !,
   enemy_dead(Here),
   forall(item(Item, Desc, (Here, Furniture, Which), false), (nl, write(Item),write(' - '),write(Desc))).
+inspect(_, _) :-
+  write("There is no such furniture here"), !, fail.
   
 describe_room(Here) :-
   room(Here, Desc),
