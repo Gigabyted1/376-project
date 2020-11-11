@@ -159,7 +159,7 @@ start :-
   forall(item(A, B, (C, D, E), true), asserta(item(A, B, (C, D, E), false))), !,
   forall(item(A, B, (C, D, E), true), retract(item(A, B, (C, D, E), true))), !,
   forall(enemy(A, B, (C, D), true), asserta(enemy(A, B, (C, D), false))), !,
-  forall(enemy(A, B, (C, D), true), retract(enemy(A, B, (C, D), true))), !, fail.
+  forall(enemy(A, B, (C, D), true), retract(enemy(A, B, (C, D), true))), !, fail,
   asserta(my_loc("Tower")), !,
   observe.
   
