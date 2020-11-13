@@ -125,10 +125,10 @@ death("Gazebo 3000", "All at once, a set of arms spring from the back of the cha
 death("Robo-Sam", "His gaze suddenly turns in your direction, and a twisted grin forms on his face. Paralyzed with fear, you can only watch as an apparatus expands from a small slot on one of is arms and launches a heavy net at you. Now incapacitated, Robo-Sam takes you to his office to sign you up for CPSC 476 next semester.", "Robotic though he may be, he is still partly human. What does Dr. Sam hate the most...?").
 
 % Victory(when you beat an enemy) - victory(<enemy>, <message>).
-victory(""Laser Turret", "You hear a high-pitched noise and as the turret's muzzle swings around, you raise the small hand mirror in desperation. You close your eyes... and hear an explosion! The mirror is a smoking mess, but the turret is destroyed.").
+victory("Laser Turret", "You hear a high-pitched noise and as the turret's muzzle swings around, you raise the small hand mirror in desperation. You close your eyes... and hear an explosion! The mirror is a smoking mess, but the turret is destroyed.").
 victory("Robospider", "The massive arachnid catches you by the pant leg and pulls you to the floor. You manage to twist around and pull out the full water bottle from your bag. As the spider's mechanical fangs close toward you, you open the nozzle and spray water into the exposed circuitry on the spider's abdomen. You hear the delicious sound of malfunctioning circuitry and roll away as the mechanical monstrosity collapses to the floor.").
 victory("Gazebo 3000", "All at once, a set of arms spring from the back of the chair and a set of sensors from the top. Attached to the arms are various elements of torture. As it speeds toward you, it screeches to a halt in front of you, pausing in seeming confusion. One of the sensors examines your shiny new A+ sticker. After a few very concerning seconds, the sensor retreats, the arms retract, and it dispenses a butterscotch lollipop. Thanks...?").
-victory("Robo-Sam", "His gaze suddenly turns in your direction, and a twisted grin forms on his face. Not for long though, for as you smile back and pull out 'JavaScript: The Definitive Guide', it turns to a look of dread. \"No...,\" he says"). \"I thought I destroyed them all.\" You walk toward him as you ruffle the pages menacingly. You turn to page 84 and begin reciting, \"JavaScript is very flexible and has huge writability advantages. It is the highest standard of programming language and shou-\ You are interrupted by a piercing shriek of pain as Robo-Sam falls to his knees and frantically begins typing on the console on his chest. You see the words \"self destruct sequence\" appear there, and realize it's time to leave. You sprint to the nearest window and dive through it as the building explodes behind you..."  
+victory("Robo-Sam", "His gaze suddenly turns in your direction, and a twisted grin forms on his face. Not for long though, for as you smile back and pull out 'JavaScript: The Definitive Guide', it turns to a look of dread. \"No...,\" he says. \"I thought I destroyed them all.\" You walk toward him as you ruffle the pages menacingly. You turn to page 84 and begin reciting, \"JavaScript is very flexible and has huge writability advantages. It is the highest standard of programming language and shou- You are interrupted by a piercing shriek of pain as Robo-Sam falls to his knees and frantically begins typing on the console on his chest. You see the words \"self destruct sequence\" appear there, and realize it's time to leave. You sprint to the nearest window and dive through it as the building explodes behind you...").  
 % ----- Handles moving throughout the map ----- %
 
 move(Room) :-
@@ -189,13 +189,13 @@ observe :-
   nl, list_enemies(Here), !, fail.
   
 inspect(Furniture, Which) :-
-  my_loc(Here), !,
-  item(Item, Desc, (Here, Furniture, Which), false),
-  enemy_dead(Here, _),
-  forall(item(A, B, (C, D, E), false), (nl, write(A),write(' - '),write(B))).
+  my_loc(Here),
+  item(_, _, (Here, Furniture, Which), false), !,
+  enemy_dead(Here, _), !,
+  forall(item(A, B, (Here, Furniture, Which), false), (nl, write(A),write(' - '),write(B))).
 inspect(Furniture, Which) :-
-  my_loc(Here), !,
-  furn(Furniture, Here, Which),
+  my_loc(Here),
+  furn(Furniture, Here, Which), !,
   write("You don't find anything useful.").
 inspect(_, _) :-
   write("You can't inspect something that doesn't exist."), !, fail.
