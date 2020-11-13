@@ -24,7 +24,7 @@ room("Room 232", 'One of the computer science classrooms.').
 room("Conference Room" , 'The conference room of the computer science department is where many students go to study, work on assignments or projects, and meet with friends. Objects may be found here left by students.').
 room("CS Department", 'The computer science department once held the offices of several department faculty members. Now it is the lair of a mad computer scientist.').
 
-% Doors - door(<room1>, <room2>).
+% Doors - door(<room1>, <room2>, <locked?>, <key-item-name>).
 door("Lobby", "Downstairs Left Wing", "unlocked", "").
 door("Lobby", "Downstairs Right Wing", "unlocked", "").
 door("Downstairs Right Wing", "Downstairs Bathroom", "locked", "Janitor's Keyring").
@@ -40,7 +40,7 @@ door("Upstairs Left Wing", "CS Department", "locked", "CS Department Key").
 door("Upstairs Left Wing", "Stairway 2", "unlocked", "").
 door("Upstairs Left Wing", "Upstairs Right Wing", "unlocked", "").
 
-/* Doors aren't one-way */
+% Doors aren't one-way 
 :- forall(door(X,Y,Z,A), assert(door(Y,X,Z,A))).
 
 % Furniture - furn(<furn_name>, <location>, <amount>).
@@ -129,8 +129,8 @@ victory("Laser Turret", "You hear a high-pitched noise and as the turret's muzzl
 victory("Robospider", "The massive arachnid catches you by the pant leg and pulls you to the floor. You manage to twist around and pull out the full water bottle from your bag. As the spider's mechanical fangs close toward you, you open the nozzle and spray water into the exposed circuitry on the spider's abdomen. You hear the delicious sound of malfunctioning circuitry and roll away as the mechanical monstrosity collapses to the floor.").
 victory("Gazebo 3000", "All at once, a set of arms spring from the back of the chair and a set of sensors from the top. Attached to the arms are various elements of torture. As it speeds toward you, it screeches to a halt in front of you, pausing in seeming confusion. One of the sensors examines your shiny new A+ sticker. After a few very concerning seconds, the sensor retreats, the arms retract, and it dispenses a butterscotch lollipop. Thanks...?").
 victory("Robo-Sam", "His gaze suddenly turns in your direction, and a twisted grin forms on his face. Not for long though, for as you smile back and pull out 'JavaScript: The Definitive Guide', it turns to a look of dread. \"No...,\" he says. \"I thought I destroyed them all.\" You walk toward him as you ruffle the pages menacingly. You turn to page 84 and begin reciting, \"JavaScript is very flexible and has huge writability advantages. It is the highest standard of programming language and shou- You are interrupted by a piercing shriek of pain as Robo-Sam falls to his knees and frantically begins typing on the console on his chest. You see the words \"self destruct sequence\" appear there, and realize it's time to leave. You sprint to the nearest window and dive through it as the building explodes behind you...").  
-% ----- Handles moving throughout the map ----- %
 
+% ----- Handles moving throughout the map ----- %
 move(Room) :-
   my_loc(Here),
   prev_loc(There),
