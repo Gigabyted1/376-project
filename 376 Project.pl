@@ -1,13 +1,13 @@
-% Reset assertions so there isn't exponential growth of doors between rooms...
+% Reset any already-defined facts so that there are no duplicate or outdated facts in memory
 :- retractall(my_loc(_)), retractall(prev_loc(_)), retractall(door(_, _, _, _)), retractall(item(_, _, _, _)).
 
-% Define our custom stuff
+% Define our facts as dynamic so that assert/1 and retract/1 can modify them
 :- dynamic my_loc/1, prev_loc/1, door/4, item/4, enemy/4.
 
 % Give the user some direction
 :- write("Use 'instructions' to learn how to interact with the world and begin your adventure.").
 
-% Rooms - room(<name>, <desc>).
+% Rooms - room(<room-name>, <desc>).
 room("Lobby", 'The lobby of ATS. There are several chairs, a nice big doormat, and a variety of science-related decorations.').
 room("Downstairs Left Wing", 'The left wing of the hallway on the first floor of ATS.').
 room("Downstairs Right Wing", 'The right wing of the hallway on the first floor of ATS.').
@@ -40,10 +40,10 @@ door("Upstairs Left Wing", "CS Department", "locked", "CS Department Key").
 door("Upstairs Left Wing", "Stairway 2", "unlocked", "").
 door("Upstairs Left Wing", "Upstairs Right Wing", "unlocked", "").
 
-% Doors aren't one-way 
+% Doors aren't one-way! This asserts reverse connections for all doors
 :- forall(door(X,Y,Z,A), assert(door(Y,X,Z,A))).
 
-% Furniture - furn(<furn_name>, <location>, <amount>).
+% Furniture - furn(<furn-name>, <location>, <amount>).
 furn("Dinosaur Statue", "Lobby", 2).
 furn("Doormat", "Lobby", 2).
 furn("Chair", "Lobby", 8).
@@ -95,7 +95,7 @@ furn("Sink", "Upstairs Bathroom", 4).
 furn("Toilet Stall", "Upstairs Bathroom", 4).
 furn("Mirror", "Upstairs Bathroom", 4).
 
-% Items - item(<item_name>, <description>, (<location-room>, <location-furniture>, <which-furniture>), <in-bag?>).
+% Items - item(<item-name>, <desc>, (<location-room>, <location-furniture>, <which-furniture>), <in-bag?>).
 
 % Keys
 item("Janitor's Keyring", "A ring of keys. There are various keychains of cleaning implements and bad janitor puns.", ("Room 130", "Desk", 2), false).
@@ -112,19 +112,19 @@ item("Water bottle", "Looks like a student left their water bottle behind. Hey, 
 % Miscellaneous Items
 item("Used chewing gum", "It's a piece of chewing gum stuck to the bottom of the statue platform. Kinda gross.", ("Lobby", "Dinosaur Statue", 1), false).
 
-% Enemy - enemy(<name>, <item-to-defeat>, (<appearance>, <location>), <dead?>).
+% Enemy - enemy(<enemy-name>, <item-to-defeat>, (<appearance>, <location>), <dead?>).
 enemy("Laser Turret", "Hand mirror", ("A dark shape rests at the top of the stairway. In the dim light, you can see that it is a turret of some kind.", "Stairway 1"), false).
 enemy("Robospider", "Water bottle", ("You hear fans whirring, electronic beeps, and a metallic clicking sound. Down on the stage, you see a huge robotic spider.", "Auditorium"), false).
 enemy("Gazebo 3000", "A+ Sticker", ("You see what seems to be an oddly shaped chair that rests on a set of treads.", "Room 232"), false).
 enemy("Robo-Sam", "'JavaScript: The Definitive Guide' by David Flanagan", ("You can see him, no, 'it', bent over the fresh corpse of a student. Robotic limbs, wires crisscrossing across its chest, and yet a fully human face and head. You recognize that face... it's Dr. Sam.", "CS Department"), false).
 
-% Death(ways to die) - death(<enemy/environment>, <death-message>, <avoidance-hint>).
+% Death(ways to die) - death(<enemy>, <death-message>, <avoidance-hint>).
 death("Laser Turret", "You hear a high-pitched noise and there's no time to react as the turret's muzzle swings around and guns you down with sick looking laser beams. Sick, though they may be, you are no less dead...", "As your vision fades, you notice one of the laser beams bounce of the reflective window.").
 death("Robospider", "The massive arachnid catches you by the pant leg and pulls you to the floor. A robot it may be, but it seems you are no less spider food...", "As you lay there awaiting your fate, you see the bright lights and exposed circuitry of the spider.").
 death("Gazebo 3000", "All at once, a set of arms spring from the back of the chair and a set of sensors from the top. Attached to the arms are various elements of torture. As it speeds toward you, faster almost than comprehension, you too late see the word, 'GAZEBO' printed across the front. The arms trap you into the chair and your punishment begins...", "You noticed the contraption pause expectantly just before beginning its dark function. Perhaps if you showed it something...?").
 death("Robo-Sam", "His gaze suddenly turns in your direction, and a twisted grin forms on his face. Paralyzed with fear, you can only watch as an apparatus expands from a small slot on one of is arms and launches a heavy net at you. Now incapacitated, Robo-Sam takes you to his office to sign you up for CPSC 476 next semester.", "Robotic though he may be, he is still partly human. What does Dr. Sam hate the most...?").
 
-% Victory(when you beat an enemy) - victory(<enemy>, <message>).
+% Victory(when you beat an enemy) - victory(<enemy>, <victory-message>).
 victory("Laser Turret", "You hear a high-pitched noise and as the turret's muzzle swings around, you raise the small hand mirror in desperation. You close your eyes... and hear an explosion! The mirror is a smoking mess, but the turret is destroyed.").
 victory("Robospider", "The massive arachnid catches you by the pant leg and pulls you to the floor. You manage to twist around and pull out the full water bottle from your bag. As the spider's mechanical fangs close toward you, you open the nozzle and spray water into the exposed circuitry on the spider's abdomen. You hear the delicious sound of malfunctioning circuitry and roll away as the mechanical monstrosity collapses to the floor.").
 victory("Gazebo 3000", "All at once, a set of arms spring from the back of the chair and a set of sensors from the top. Attached to the arms are various elements of torture. As it speeds toward you, it screeches to a halt in front of you, pausing in seeming confusion. One of the sensors examines your shiny new A+ sticker. After a few very concerning seconds, the sensor retreats, the arms retract, and it dispenses a butterscotch lollipop. Thanks...?").
@@ -233,7 +233,7 @@ bag :-
   write('Your bag contains: '), !,
   forall(item(Item, Desc, (_, _, _), true), (nl, write('>'),write(Item),write(' - '),write(Desc))).
     
-% ----- Enemy interaction logic ----- %
+% ----- Handles interacting with enemies ----- %
 
 kill(Enemy) :-
   my_loc(Here),
