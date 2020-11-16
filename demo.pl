@@ -1,6 +1,6 @@
 :- retractall(my_loc(_)), retractall(door(_, _, _, _)), retractall(item(_, _, _, _)).
 
-:- dynamic my_loc/1, door/4, in_bag/2, item/4, enemy/4.
+:- dynamic my_loc/1, door/4, item/4, enemy/4.
 
 :- write("Use 'instructions' to learn how to interact with the world and begin your adventure.").
 
